@@ -1,7 +1,9 @@
 import java.util.List;
 
-public class QuickSort implements ArraylistSorter {
-    QuickSort () {}
+public class QuickSort extends ArraylistSorter {
+    QuickSort (MainFrame f) {
+        super(f);
+    }
 
     public List<Integer> sort(List<Integer> list) {
         sorter(list, 0, list.size());
