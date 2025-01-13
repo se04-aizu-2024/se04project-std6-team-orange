@@ -1,54 +1,70 @@
+import java.util.ArrayList;
 import java.util.List;
 
-public class MergeSort implements ArraylistSorter{
+public class MergeSort implements ArraylistSorter {
 
-    public List<Integer> sort(List<Integer> list){
-
-        //If the list is empty or has only one element, it is already sorted.                
-        if(list.size() <= 1){
-            return list;
-        }
-
-        // Split the list into two                                                           
-        int mid = list.size() / 2;
-        List<Integer> left = list.subList(0, mid);
-        List<Integer> right = list.subList(mid, list.size());
-
-        // Sort both halves recursively.                                                     
-        List<Integer> sortedLeft = sort(new ArrayList<>(left));
-        List<Integer> sortedRight = sort(new ArrayList<>(right));
-
-        // Combine the sorted halves and return the result.                                  
-        return merge(sortedLeft, sortedRight);
+    
+    public List<List<Integer>> sort(List<Integer> list) {
+        // 手順を格納するリスト
+        List<List<Integer>> steps = new ArrayList<>();
+        // ソート処理の呼び出し
+        mergeSort(list, 0, list.size() - 1, steps);
+        return steps;
     }
 
-    private List<Integer> merge(List<Integer> left, List<Integer> right){
-        List<Integer> merged = new ArrayList<>();
-        int i = 0, j = 0;
+    private void mergeSort(List<Integer> list, int left, int right, List<List<Integer>> steps) {
+        if (left >= right) {
+            return;
+        }
 
-        // Combine the elements of both lists in sorted order.                               
-        while (i < left.size() && j < right.size()) {
-            if (left.get(i) <= right.get(j)) {
-                merged.add(left.get(i));
+        // 中央のインデックスを計算
+        int mid = (left + right) / 2;
+
+        // 左半分を再帰的にソート
+        mergeSort(list, left, mid, steps);
+        // 右半分を再帰的にソート
+        mergeSort(list, mid + 1, right, steps);
+        // 左右の半分をマージ
+        merge(list, left, mid, right, steps);
+    }
+
+    private void merge(List<Integer> list, int left, int mid, int right, List<List<Integer>> steps) {
+        // 左半分と右半分の要素を保持する一時リスト
+        List<Integer> temp = new ArrayList<>();
+
+        int i = left;        // 左半分のポインタ
+        int j = mid + 1;     // 右半分のポインタ
+
+        // 左右をマージして一時リストに追加
+        while (i <= mid && j <= right) {
+            if (list.get(i) <= list.get(j)) {
+                temp.add(list.get(i));
                 i++;
             } else {
-                merged.add(right.get(j));
+                temp.add(list.get(j));
                 j++;
             }
         }
 
-          // Add the remaining elements from the left list.                                    
-        while (i < left.size()) {
-            merged.add(left.get(i));
+        // 残りの要素を追加
+        while (i <= mid) {
+            temp.add(list.get(i));
             i++;
         }
-
-        // Add remaining elements from the list on the right.                                
-        while (j < right.size()) {
-            merged.add(right.get(j));
+        while (j <= right) {
+            temp.add(list.get(j));
             j++;
         }
 
-        return merged;
+        // 元のリストにマージした結果を反映
+        for (int k = 0; k < temp.size(); k++) {
+            int index = left + k;   
+            int newValue = temp.get(k); 
+            if (!list.get(index).equals(newValue)){
+                steps.add(List.of(index, newValue));
+            }
+            list.set(index, newValue); // 値更新
+        }
     }
 }
+
