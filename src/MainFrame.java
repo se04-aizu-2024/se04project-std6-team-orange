@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
     // For sorting visualization
     private int swappedIndex1 = -1;
     private int swappedIndex2 = -1;
-    private List<List<Integer>> procedureList;
+    private List<List<Integer>> procedureList = new ArrayList<>();
 
     private ArraylistSorter sorter = null;
     private boolean isMergeSort = false;
@@ -55,7 +55,8 @@ public class MainFrame extends JFrame {
     // Constructor when data is specified
     // Build the frame using the provided data
     public MainFrame(List<Integer> d) {
-        makeFrame(d);
+      sorter = new BubbleSort();
+      makeFrame(d);
     }
 
     public void makeFrame(List<Integer> d) {
@@ -72,6 +73,9 @@ public class MainFrame extends JFrame {
         controlPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 0, 10, 0);
+
+        sorter = new BubbleSort();
+        isMergeSort = false;
         
         // Create and place the dropdown menu
         JComboBox<String> dropdownMenu = new JComboBox<>(new String[]{"Bubble Sort", "Heap Sort", "Merge Sort", "Quick Sort"});
@@ -80,9 +84,11 @@ public class MainFrame extends JFrame {
 
             switch (selectedSort) {
                 case "Bubble Sort":
+                    sorter = new BubbleSort();
                     isMergeSort = false;
                     break;
                 case "Heap Sort":
+                    sorter = new HeapSort();
                     isMergeSort = false;
                     break;
                 case "Merge Sort":
@@ -328,4 +334,3 @@ public class MainFrame extends JFrame {
         }
     }
 }
-
