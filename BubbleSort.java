@@ -1,31 +1,27 @@
+import java.util.ArrayList;
 import java.util.List;
+
 public class BubbleSort implements ArraylistSorter {
 
-    public BubbleSort() {}
-
-    @Override
-    public List<Integer> sort(List<Integer> list) {
+    public List<List<Integer>> sort(List<Integer> list) {
+        List<List<Integer>> steps = new ArrayList<>();
         int n = list.size();
-        boolean swapped;
-
+        
+        // Bubble Sortアルゴリズムの実装
         for (int i = 0; i < n - 1; i++) {
-            swapped = false;
             for (int j = 0; j < n - 1 - i; j++) {
+                // 隣接要素を比較して、順番が逆なら交換
                 if (list.get(j) > list.get(j + 1)) {
-                    swap(list, j, j + 1);
-                    swapped = true; 
+                    // 値を交換
+                    int temp = list.get(j);
+                    list.set(j, list.get(j + 1));
+                    list.set(j + 1, temp);
+                    
+                    // 手順を記録
+                    steps.add(List.of(j, j + 1));
                 }
             }
-            if (!swapped) {
-                break;
-            }
         }
-        return list;
-    }
-
-    private void swap(List<Integer> list, int i, int j) {
-        int temp = list.get(i);
-        list.set(i, list.get(j));
-        list.set(j, temp);
+        return steps;
     }
 }

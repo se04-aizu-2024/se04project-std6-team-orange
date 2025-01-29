@@ -1,46 +1,52 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class HeapSort implements ArraylistSorter {
-    
-    HeapSort() {}
 
-    public List<Integer> sort(List<Integer> list) {
-        buildHeap(list);
-
-
-        for (int i = list.size() - 1; i > 0; i--) {
+    public List<List<Integer>> sort(List<Integer> list) {
+        List<List<Integer>> steps = new ArrayList<>();
+        int n = list.size();
+        
+        // Build a max heap
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(list, n, i, steps);
+        }
+        
+        // Extract elements from heap one by one
+        for (int i = n - 1; i >= 1; i--) {
+            // Move current root to end
             swap(list, 0, i);
-            heapify(list, 0, i);
+            steps.add(List.of(0, i));
+            
+            // Call max heapify on the reduced heap
+            heapify(list, i, 0, steps);
         }
-        return list;
+        
+        return steps;
     }
 
-
-    private void buildHeap(List<Integer> list) {
-
-        for (int i = list.size() / 2 - 1; i >= 0; i--) {
-            heapify(list, i, list.size());
-        }
-    }
-
-    private void heapify(List<Integer> list, int root, int heapSize) {
-        int largest = root;
-        int left = 2 * root + 1; 
-        int right = 2 * root + 2; 
-
-
-        if (left < heapSize && list.get(left) > list.get(largest)) {
+    private void heapify(List<Integer> list, int n, int i, List<List<Integer>> steps) {
+        int largest = i;  // Initialize largest as root
+        int left = 2 * i + 1;  // left = 2*i + 1
+        int right = 2 * i + 2; // right = 2*i + 2
+        
+        // If left child is larger than root
+        if (left < n && list.get(left) > list.get(largest)) {
             largest = left;
         }
-
-
-        if (right < heapSize && list.get(right) > list.get(largest)) {
+        
+        // If right child is larger than largest so far
+        if (right < n && list.get(right) > list.get(largest)) {
             largest = right;
         }
-
-        if (largest != root) {
-            swap(list, root, largest);
-            heapify(list, largest, heapSize);
+        
+        // If largest is not root
+        if (largest != i) {
+            swap(list, i, largest);
+            steps.add(List.of(i, largest));
+            
+            // Recursively heapify the affected sub-tree
+            heapify(list, n, largest, steps);
         }
     }
 
